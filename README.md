@@ -123,7 +123,7 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
    ```
 
 3. **Open your browser:**  
-   Go to [`your local host`](http://127.0.0.1:5000/ (Press CTRL+C in Terminal to quit))
+   Go to `your local host` http://127.0.0.1:5000/ (Press CTRL+C in Terminal to quit)
 
 4. **Upload PDFs:**  
    Use the web interface to upload one or more PDF files.
