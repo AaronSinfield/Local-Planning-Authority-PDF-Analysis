@@ -89,7 +89,7 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
 ## Features
 
 - **Batch PDF Upload:** Upload multiple PDFs via a simple web interface.
-- **Folder PDF List and PDF Preview** Navigate and preview PDFs within web tool.  
+- **Folder PDF List and PDF Preview:** Navigate through and preview PDFs within web tool.  
 - **Automated Extraction:** Extracts M4(2) and M4(3) accessibility standards, percentage targets, plan periods, and document dates.
 - **OCR Support:** Uses Tesseract OCR for scanned PDFs.
 - **Summarization:** Summarises relevant text using NLP (LexRank).
