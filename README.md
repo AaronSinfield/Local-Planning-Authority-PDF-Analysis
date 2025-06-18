@@ -85,7 +85,7 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
 - **Batch PDF Upload:** Upload multiple PDFs via a simple web interface.
 - **Automated Extraction:** Extracts M4(2) and M4(3) accessibility standards, percentage targets, plan periods, and document dates.
 - **OCR Support:** Uses Tesseract OCR for scanned PDFs.
-- **Summarization:** Summarizes relevant text using NLP (LexRank).
+- **Summarization:** Summarises relevant text using NLP (LexRank).
 - **Progress Tracking:** Real-time progress updates during processing.
 - **Downloadable Results:** Outputs results as CSV, JSON, and debug logs in a ZIP file.
 - **Error Logging:** Detailed error logs for troubleshooting.
