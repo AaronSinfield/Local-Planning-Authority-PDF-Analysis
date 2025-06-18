@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Processor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background: radial-gradient(circle at center, #23272f 0%, #2d343e 70%, #181a20 100%);
+            min-height: 100vh;
+            margin: 0;
+            color: #f5f6fa;
+        }
+        .container-fluid {
+            max-width: 1200px;
+            margin: auto;
+            background-color: rgba(30, 32, 36, 0.98);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        .header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0px;
+            margin-bottom: 1.5rem;
+        }
+        .header-logo {
+            width: 380px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+        h1, .accordion-button, .form-label, .form-check-label, .radio-label {
+            color: #f5f6fa;
+        }
+        .accordion-button {
+            background-color: #23272f;
+            border: none;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: #2d343e;
+            color: #fff;
+        }
+        .accordion-body {
+            background-color: #23272f;
+            color: #e0e0e0;
+        }
+        .accordion-item {
+            background-color: #23272f;
+            border: 1px solid #343a40;
+        }
+        #progress { display: none; }
+        .folder-input { margin-bottom: 12px; }
+        #addFolderBtn { margin-bottom: 12px; }
+        #pdfCount {
+            font-weight: bold;
+            color: #00e676;
+            margin-top: 10px;
+        }
+        .folder-details {
+            margin-left: 15px;
+            font-size: 0.95em;
+            color: #b0bec5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .radio-btn { margin: 0; }
+        .radio-label { margin-left: 5px; }
+        #progressDetails {
+            font-size: 0.9em;
+            color: #b0bec5;
+            margin-top: 5px;
+        }
+        .error-text { color: #ff5252; }
+        .form-control, .form-check-input {
+            background-color: #23272f;
+            color: #f5f6fa;
+            border: 1px solid #444950;
+        }
+        .form-control:focus, .form-check-input:focus {
+            background-color: #23272f;
+            color: #fff;
+            border-color: #00e676;
+            box-shadow: 0 0 0 0.2rem rgba(0,230,118,.25);
+        }
+        .btn-primary {
+            background-color: #00bfa5;
+            border-color: #00bfa5;
+            color: #fff;
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: #008e76;
+            border-color: #008e76;
+        }
+        .btn-secondary {
+            background-color: #23272f;
+            border-color: #444950;
+            color: #f5f6fa;
+        }
+        .btn-secondary:hover, .btn-secondary:focus {
+            background-color: #343a40;
+            border-color: #444950;
+        }
+        .progress {
+            background-color: #181a20;
+            border-radius: 8px;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #00e676 0%, #00bfa5 100%);
+            color: #181a20;
+        }
+        .alert-success {
+            background-color: #263238;
+            color: #00e676;
+            border-color: #00e676;
+        }
+        .alert-danger {
+            background-color: #2d1a1a;
+            color: #ff5252;
+            border-color: #ff5252;
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #23272f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444950;
+            border-radius: 5px;
+        }
+        .custom-file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .custom-file-input-wrapper input[type="file"] {
+            opacity: 0;
+            width: 100%;
+            height: 38px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 2;
+            cursor: pointer;
+        }
+        .custom-file-label {
+            display: block;
+            width: 100%;
+            height: 38px;
+            background-color: #00bfa5;
+            color: #fff;
+            border: 1px solid #00bfa5;
+            border-radius: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            line-height: 1.5;
+            text-align: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            z-index: 1;
+            position: relative;
+            transition: background 0.2s, border 0.2s;
+        }
+        .custom-file-input-wrapper input[type="file"]:focus + .custom-file-label,
+        .custom-file-label:focus {
+            background-color: #008e76;
+            border-color: #008e76;
+            outline: none;
+        }
+        .pdf-file-list {
+            margin-top: 6px;
+            font-size: 0.95em;
+            color: #b0bec5;
+            display: none;
+        }
+        .pdf-file-list ul {
+            margin: 0 0 0 18px;
+            padding: 0;
+        }
+        .pdf-file-list li {
+            margin-bottom: 2px;
+        }
+        .pdf-file-list a {
+            color: #00e676;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .pdf-file-list a:hover {
+            color: #00bfa5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="header-flex">
+            <svg class="header-logo" viewBox="0 0 400 80" fill="none">
+                <rect x="10" y="8" width="36" height="48" rx="6" fill="#00bfa5" stroke="#23272f" stroke-width="2"/>
+                <polygon points="38,8 46,16 38,16" fill="#23272f" opacity="0.5"/>
+                <text x="20" y="30" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" fill="#fff">PDF</text>
+                <text x="60" y="53" font-family="Arial, Helvetica, sans-serif" font-size="55" font-weight="bold" fill="#00bfa5">ScanPro</text>
+            </svg>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="folderInputs">
+                    <div class="folder-input">
+                        <label for="files0" class="form-label">Select a folder:</label>
+                        <div class="custom-file-input-wrapper">
+                            <input type="file" class="form-control" id="files0" name="files0" webkitdirectory accept=".pdf" onchange="updatePdfCount(); updateFileLabel(this); updateFileList('files0');">
+                            <span class="custom-file-label" id="label-files0">Choose Folder</span>
+                        </div>
+                        <div id="details0" class="folder-details">
+                            <input type="radio" class="form-check-input radio-btn" id="selectFolder0" name="selectFolder" onchange="updatePdfCount()">
+                            <label class="radio-label" for="selectFolder0"></label>
+                            <button type="button" class="btn btn-sm btn-primary ms-2" onclick="togglePdfList('files0')">View PDFs</button>
+                        </div>
+                        <div class="pdf-file-list" id="fileList-files0"></div>
+                    </div>
+                </div>
+                <button id="addFolderBtn" class="btn btn-secondary">Add Another Folder</button>
+                <div class="mt-2">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="processAll" name="processOption" value="all" checked onchange="toggleFolderSelection()">
+                        <label class="form-check-label" for="processAll">Process All Folders</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="processOne" name="processOption" value="one" onchange="toggleFolderSelection()">
+                        <label class="form-check-label" for="processOne">Process One Folder</label>
+                    </div>
+                </div>
+                <div id="pdfCount">Selected PDFs: 0</div>
+                <button id="processFoldersBtn" class="btn btn-primary">Process Folders</button>
+                <div id="progress" class="mt-3">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" id="progressBar"></div>
+                    </div>
+                    <p id="progressMessage">Waiting...</p>
+                    <div id="progressDetails"></div>
+                </div>
+                <div id="result" class="mt-3"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="how-to-section">
+                    <div class="accordion" id="howToAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="howToHeading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHowTo" aria-expanded="true" aria-controls="collapseHowTo">
+                                    How to Use This Tool
+                                </button>
+                            </h2>
+                            <div id="collapseHowTo" class="accordion-collapse collapse show" aria-labelledby="howToHeading" data-bs-parent="#howToAccordion">
+                                <div class="accordion-body">
+                                    <ol>
+                                        <ol>
+                                            <li><strong>Select a Folder:</strong> Click "Choose folder" to choose a folder with your PDF files.</li>
+                                            <li><strong>Add More Folders (Optional):</strong> If you have multiple folders click "Add Another Folder" to add more.</li>
+                                            <li><strong>Choose Processing Option:</strong> Select "Process All Folders" to analyse all selected folders, or "Process One Folder" to pick a single folder highlighted by the button next to name.</li>
+                                            <li><strong>Check PDF Count:</strong> The site will show how many PDF files are in each selected folder and the total selected PDFs.</li>
+                                            <li><strong>View or Hide PDFs:</strong> Click the "View PDFs" button next to any folder to see a list of PDF files in that folder. Click "Hide PDFs" to close the list. You can also click any filename to preview the PDF in a popup.</li>
+                                            <li><strong>Process the Files:</strong> Click the "Process Folders" button at the bottom to start. The app will read through the PDFs and provide detailed progress.</li>
+                                            <li><strong>Watch the Progress:</strong> A progress bar, file count, and estimated time will update during processing.</li>
+                                            <li><strong>Download Results:</strong> When done, a file called <code>pdf_processing_results.zip</code> will download with a summary .csv file, detailed data, and error logs.</li>
+                                        </ol>
+                                    </ol>
+                                    <p><em>Tip:</em> Use text-based PDFs and browsers like Chrome or Edge for best results.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="pdfPreviewModal" tabindex="-1" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="background:#23272f;">
+          <div class="modal-header">
+            <h5 class="modal-title" id="pdfPreviewModalLabel" style="color:#fff;">PDF Preview</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="height:80vh;">
+            <iframe id="pdfPreviewFrame" src="" style="width:100%;height:100%;border:none;background:#181a20;"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let folderCount = 1;
+        let totalFiles = 0;
+        let startTime = null;
+
+        function updateFileLabel(input) {
+            const label = document.getElementById('label-' + input.id);
+            if (input.files && input.files.length > 0) {
+                let folderName = "Folder Selected";
+                const firstFile = input.files[0];
+                if (firstFile.webkitRelativePath) {
+                    folderName = firstFile.webkitRelativePath.split('/')[0];
+                }
+                label.textContent = folderName;
+            } else {
+                label.textContent = "Choose Folder";
+            }
+        }
+
+        function toggleFolderSelection() {
+            const processOne = document.getElementById('processOne').checked;
+            for (let i = 0; i < folderCount; i++) {
+                const radio = document.getElementById(`selectFolder${i}`);
+                const label = document.querySelector(`label[for="selectFolder${i}"]`);
+                if (processOne) {
+                    radio.style.display = 'inline-block';
+                    label.style.display = 'inline';
+                } else {
+                    radio.style.display = 'inline-block';
+                    label.style.display = 'inline';
+                    radio.checked = false;
+                }
+            }
+            updatePdfCount();
+        }
+
+        function updatePdfCount() {
+            let totalPdfCount = 0;
+            let selectedFolderPdfCount = 0;
+            let selectedIndex = -1;
+
+            for (let i = 0; i < folderCount; i++) {
+                const files = document.getElementById(`files${i}`).files;
+                let pdfCount = 0;
+                let folderName = "Unknown Folder";
+
+                if (files.length > 0) {
+                    const firstFile = files[0];
+                    if (firstFile.webkitRelativePath) {
+                        folderName = firstFile.webkitRelativePath.split('/')[0];
+                    }
+                    for (let file of files) {
+                        if (file.name.toLowerCase().endsWith('.pdf')) {
+                            pdfCount++;
+                        }
+                    }
+                } else {
+                    pdfCount = 0;
+                }
+
+                const radio = document.getElementById(`selectFolder${i}`);
+                const label = document.querySelector(`label[for="selectFolder${i}"]`);
+                label.textContent = `${folderName}: ${pdfCount} PDFs`;
+
+                if (radio.checked) {
+                    selectedIndex = i;
+                    selectedFolderPdfCount = pdfCount;
+                }
+
+                if (document.getElementById('processAll').checked) {
+                    totalPdfCount += pdfCount;
+                }
+            }
+
+            if (document.getElementById('processOne').checked && selectedIndex >= 0) {
+                totalPdfCount = selectedFolderPdfCount;
+            }
+
+            totalFiles = totalPdfCount;
+            document.getElementById('pdfCount').textContent = `Selected PDFs: ${totalPdfCount}`;
+            document.getElementById('processFoldersBtn').disabled = totalPdfCount === 0;
+        }
+
+        // Toggle the list of PDFs for a folder and allow preview
+        function togglePdfList(inputId) {
+            const fileListDiv = document.getElementById('fileList-' + inputId);
+            const btn = document.querySelector(`#details${inputId.replace('files','')}` + ' button');
+            if (!fileListDiv) return;
+
+            if (fileListDiv.style.display === 'block') {
+                fileListDiv.style.display = 'none';
+                if (btn) btn.textContent = 'View PDFs';
+                return;
+            }
+
+            const input = document.getElementById(inputId);
+            const files = input.files;
+            if (files.length === 0) {
+                fileListDiv.innerHTML = '<em>No PDFs selected.</em>';
+                fileListDiv.style.display = 'block';
+                if (btn) btn.textContent = 'Hide PDFs';
+                return;
+            }
+            let list = '<ul>';
+            let found = false;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.name.toLowerCase().endsWith('.pdf')) {
+                    found = true;
+                    list += `<li><a href="#" onclick="previewPdf('${inputId}',${i});return false;">${file.name}</a></li>`;
+                }
+            }
+            list += '</ul>';
+            fileListDiv.innerHTML = found ? list : '<em>No PDFs found in this folder.</em>';
+            fileListDiv.style.display = 'block';
+            if (btn) btn.textContent = 'Hide PDFs';
+        }
+
+        function previewPdf(inputId, fileIndex) {
+            const input = document.getElementById(inputId);
+            const file = input.files[fileIndex];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            document.getElementById('pdfPreviewFrame').src = url;
+            const modal = new bootstrap.Modal(document.getElementById('pdfPreviewModal'));
+            modal.show();
+            document.getElementById('pdfPreviewModal').addEventListener('hidden.bs.modal', function handler() {
+                document.getElementById('pdfPreviewFrame').src = '';
+                URL.revokeObjectURL(url);
+                document.getElementById('pdfPreviewModal').removeEventListener('hidden.bs.modal', handler);
+            });
+        }
+
+        function updateFileList(inputId) {
+            const fileListDiv = document.getElementById('fileList-' + inputId);
+            const btn = document.querySelector(`#details${inputId.replace('files','')}` + ' button');
+            if (fileListDiv) fileListDiv.style.display = 'none';
+            if (btn) btn.textContent = 'View PDFs';
+        }
+
+        document.getElementById('processFoldersBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+            const processAll = document.getElementById('processAll').checked;
+            const formData = new FormData();
+            let hasFiles = false;
+            let filesToProcess = [];
+
+            if (processAll) {
+                for (let i = 0; i < folderCount; i++) {
+                    const files = document.getElementById(`files${i}`).files;
+                    if (files.length > 0) {
+                        hasFiles = true;
+                        for (let file of files) {
+                            if (file.name.toLowerCase().endsWith('.pdf')) {
+                                formData.append('files', file);
+                                filesToProcess.push(file.name);
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < folderCount; i++) {
+                    const radio = document.getElementById(`selectFolder${i}`);
+                    if (radio.checked) {
+                        const files = document.getElementById(`files${i}`).files;
+                        if (files.length > 0) {
+                            hasFiles = true;
+                            for (let file of files) {
+                                if (file.name.toLowerCase().endsWith('.pdf')) {
+                                    formData.append('files', file);
+                                    filesToProcess.push(file.name);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+                if (!hasFiles) {
+                    alert('Please select a folder to process using the radio button.');
+                    return;
+                }
+            }
+
+            if (!hasFiles) {
+                alert('Please select at least one folder with PDFs.');
+                return;
+            }
+
+            const progress = document.getElementById('progress');
+            const progressBar = document.getElementById('progressBar');
+            const progressMessage = document.getElementById('progressMessage');
+            const progressDetails = document.getElementById('progressDetails');
+            const resultDiv = document.getElementById('result');
+            progress.style.display = 'block';
+            progressBar.style.width = '0%';
+            resultDiv.innerHTML = '';
+            startTime = new Date();
+
+            let intervalId;
+            let pollingStarted = false;
+
+            try {
+                const uploadPromise = fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                setTimeout(() => {
+                    pollingStarted = true;
+                    intervalId = setInterval(async () => {
+                        try {
+                            const response = await fetch('/progress');
+                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                            const data = await response.json();
+                            const roundedPercentage = Math.round(data.percentage);
+                            progressBar.style.width = `${roundedPercentage}%`;
+                            progressMessage.textContent = `Processing: ${roundedPercentage}% complete`;
+
+                            const processedFiles = data.current;
+                            const totalFiles = data.total;
+                            const remainingFiles = totalFiles - processedFiles;
+                            const elapsedMs = new Date() - startTime;
+                            const filesPerMs = processedFiles / elapsedMs || 1;
+                            const estimatedMs = remainingFiles / filesPerMs;
+                            const estimatedTime = Math.max(0, Math.round(estimatedMs / 1000));
+
+                            progressDetails.innerHTML = `
+                                Files processed: ${processedFiles} / ${totalFiles}<br>
+                                Files remaining: ${remainingFiles}<br>
+                                Estimated time remaining: ${estimatedTime} seconds<br>
+                                ${data.errors ? `<span class="error-text">Errors: ${data.errors.join(', ')}</span>` : ''}
+                            `;
+
+                            if (roundedPercentage >= 100 || data.message.includes("failed")) {
+                                clearInterval(intervalId);
+                                progressMessage.textContent = data.message;
+                                progressDetails.innerHTML = data.errors ? `<span class="error-text">Errors: ${data.errors.join(', ')}</span>` : 'Processing complete!';
+                            }
+                        } catch (error) {
+                            console.error('Progress fetch error:', error);
+                            progressMessage.textContent = `Error: ${error.message}`;
+                            progressDetails.innerHTML = '';
+                            clearInterval(intervalId);
+                        }
+                    }, 500);
+                }, 500);
+
+                const response = await uploadPromise;
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'pdf_processing_results.zip';
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    resultDiv.innerHTML = '<div class="alert alert-success">Processing complete! Results downloaded.</div>';
+                    progressBar.style.width = '100%';
+                } else {
+                    const error = await response.json();
+                    resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error.error}</div>`;
+                    progressBar.style.width = '0%';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+                progressBar.style.width = '0%';
+            } finally {
+                progress.style.display = 'none';
+                if (pollingStarted) clearInterval(intervalId);
+            }
+        });
+
+        document.getElementById('addFolderBtn').addEventListener('click', function() {
+            const folderInputs = document.getElementById('folderInputs');
+            const newInput = document.createElement('div');
+            newInput.className = 'folder-input';
+            const inputId = `files${folderCount}`;
+            newInput.innerHTML = `
+                <label for="${inputId}" class="form-label">Select a folder:</label>
+                <div class="custom-file-input-wrapper">
+                    <input type="file" class="form-control" id="${inputId}" name="${inputId}" webkitdirectory accept=".pdf" onchange="updatePdfCount(); updateFileLabel(this); updateFileList('${inputId}');">
+                    <span class="custom-file-label" id="label-${inputId}">Choose Folder</span>
+                </div>
+                <div id="details${folderCount}" class="folder-details">
+                    <input type="radio" class="form-check-input radio-btn" id="selectFolder${folderCount}" name="selectFolder" onchange="updatePdfCount()">
+                    <label class="radio-label" for="selectFolder${folderCount}"></label>
+                    <button type="button" class="btn btn-sm btn-primary ms-2" onclick="togglePdfList('${inputId}')">View PDFs</button>
+                </div>
+                <div class="pdf-file-list" id="fileList-${inputId}"></div>
+            `;
+            folderInputs.appendChild(newInput);
+            folderCount++;
+            updatePdfCount();
+        });
+
+        for (let i = 0; i < folderCount; i++) {
+            document.getElementById(`files${i}`).addEventListener('change', function() {
+                updatePdfCount();
+                updateFileLabel(this);
+                updateFileList(`files${i}`);
+            });
+        }
+
+        toggleFolderSelection();
+    </script>
+</body>
+</html>
