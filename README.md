@@ -37,21 +37,11 @@ This tool automates the extraction of accessibility policy data from UK Local Pl
    - `date_debug_*.txt` and `extracted_text_*.txt` — Debug logs.
    - `error_log.txt` — Any errors encountered.
 
-## Example Usage
+**Install dependencies:**
 
 ```bash
-python "Code With Notes.py"
-# Follow the prompt to enter your PDF directory path
+pip install PyMuPDF PyPDF2 pdf2image pytesseract Pillow sumy nltk tqdm multiprocessing-logging
 ```
-
-## Requirements
-
-- Python 3.7+
-- Install dependencies:
-  ```bash
-  pip install -r requirements.txt
-  ```
-- Tesseract OCR (for scanned PDFs)
 
 ## File Structure
 
@@ -99,7 +89,7 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
 
 1. **Install dependencies:**
    ```bash
-   pip install -r requirements.txt
+   pip install flask PyMuPDF PyPDF2 pdf2image pytesseract Pillow sumy nltk tqdm
    ```
    *(Make sure Tesseract OCR is installed on your system.)*
 
@@ -109,13 +99,14 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
    ```
 
 3. **Open your browser:**  
-   Go to `local host`
+   Go to `your local host`
 
 4. **Upload PDFs:**  
    Use the web interface to upload one or more PDF files.
 
 5. **Download results:**  
    After processing, download the ZIP file containing CSV, JSON, and debug logs.
+
 
 ## File Structure
 
