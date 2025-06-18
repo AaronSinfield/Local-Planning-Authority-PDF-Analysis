@@ -104,6 +104,11 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
 - **tqdm** — Progress bars for batch processing.
 - **multiprocessing, threading** — Parallel and threaded processing for efficiency.
 - **csv, json, re, pathlib, os, shutil, tempfile, zipfile** — Python standard libraries for file handling, regex, and utilities.
+- **HTML5** — Markup language for structuring the web interface.
+- **CSS3** — Custom styles and layout, including dark mode and responsive design.
+- **Bootstrap 5** — CSS framework for layout, components, and modals.
+- **JavaScript (ES6+)** — Handles folder selection, file upload, PDF preview, progress tracking, and dynamic UI updates.
+- **Fetch API** — For asynchronous communication with the Flask backend.
 
 ## Usage
 
