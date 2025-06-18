@@ -36,6 +36,20 @@ This tool automates the extraction of accessibility policy data from UK Local Pl
    - `summary_*.json` — Detailed extraction per PDF.
    - `date_debug_*.txt` and `extracted_text_*.txt` — Debug logs.
    - `error_log.txt` — Any errors encountered.
+  
+## Technologies Used
+
+- **Python 3** — Main programming language for scripting and automation.
+- **PyMuPDF (fitz)** — PDF text extraction and parsing.
+- **PyPDF2** — Alternative PDF text extraction library.
+- **pdf2image** — Converts PDF pages to images for OCR.
+- **pytesseract** — Optical Character Recognition (OCR) for scanned PDFs.
+- **Pillow (PIL)** — Image processing and enhancement.
+- **sumy** — Text summarization using LexRank.
+- **nltk** — Natural Language Toolkit for tokenization and NLP tasks.
+- **tqdm** — Progress bars for batch processing.
+- **multiprocessing** — Parallel processing for faster PDF analysis.
+- **csv, json, re, pathlib, os, shutil, tempfile, zipfile, threading** — Python standard libraries for file handling, regex, and utilities.
 
 **Install dependencies:**
 
@@ -46,7 +60,6 @@ pip install PyMuPDF PyPDF2 pdf2image pytesseract Pillow sumy nltk tqdm multiproc
 ## File Structure
 
 - `Code With Notes.py` — Main batch-processing script.
-- `requirements.txt` — Python dependencies.
 
 ---
 
@@ -80,18 +93,24 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
 
 ## Technologies Used
 
-- Python (Flask, PyMuPDF, PyPDF2, pdf2image, pytesseract, sumy, NLTK)
-- HTML (for the web interface)
-- JavaScript (for progress updates)
-- CSV/JSON for output
+- **Python 3** — Main programming language.
+- **Flask** — Web framework for building the upload and results interface.
+- **PyMuPDF (fitz)** — PDF text extraction and parsing.
+- **PyPDF2** — Alternative PDF text extraction.
+- **pdf2image** — Converts PDF pages to images for OCR.
+- **Pillow (PIL)** — Image processing and enhancement.
+- **sumy** — Text summarization using LexRank.
+- **nltk** — Natural Language Toolkit for tokenization and NLP tasks.
+- **tqdm** — Progress bars for batch processing.
+- **multiprocessing, threading** — Parallel and threaded processing for efficiency.
+- **csv, json, re, pathlib, os, shutil, tempfile, zipfile** — Python standard libraries for file handling, regex, and utilities.
 
 ## Usage
 
 1. **Install dependencies:**
    ```bash
-   pip install flask PyMuPDF PyPDF2 pdf2image pytesseract Pillow sumy nltk tqdm
+   pip install flask PyMuPDF PyPDF2 pdf2image Pillow sumy nltk tqdm
    ```
-   *(Make sure Tesseract OCR is installed on your system.)*
 
 2. **Run the app:**
    ```bash
@@ -112,7 +131,7 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
 
 - `app.py` — Main Flask application and processing logic.
 - `templates/index.html` — Web interface for uploading PDFs.
-- `requirements.txt` — Python dependencies.
+
 
 ## Example Output
 
@@ -120,4 +139,4 @@ This project provides a web-based tool for batch-processing UK Local Planning Au
 - `summary_*.json` — Detailed extraction per PDF.
 - `error_log.txt` — Processing errors and debug info.
 
-*This tool is designed to help automate the extraction of accessibility policy data from UK planning documents for research and analysis.*
+*This web tool is designed to help automate the extraction of accessibility policy data from UK planning documents for research and analysis.*
