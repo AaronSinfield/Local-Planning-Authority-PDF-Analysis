@@ -78,6 +78,12 @@ pip install PyMuPDF PyPDF2 pdf2image pytesseract Pillow sumy nltk tqdm multiproc
 ### Processing Extraction and Results
 ![Processing](Screenshot3.png)
 
+### View Folder PDF List
+![FolderList](Screenshot4.png)
+
+### View PDF 
+![View PDF](Screenshot5.png)
+
 This project provides a web-based tool for batch-processing UK Local Planning Authority planning policy PDF documents. It extracts key accessibility standards (M4(2), M4(3)), percentage targets, plan periods, and document adoption/proposal dates. The tool uses advanced PDF parsing, OCR, and NLP techniques to automate data extraction and summarization.
 
 ## Features
