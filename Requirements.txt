@@ -1,0 +1,10 @@
+flask
+PyMuPDF
+PyPDF2
+pdf2image
+pytesseract
+Pillow
+sumy
+nltk
+tqdm
+multiprocessing-logging
