@@ -56,8 +56,6 @@ python "Code With Notes.py"
 ## File Structure
 
 - `Code With Notes.py` — Main batch-processing script.
-- `app.py` — (If using the web interface) Flask app for browser-based uploads.
-- `templates/index.html` — Web interface template.
 - `requirements.txt` — Python dependencies.
 
 ---
