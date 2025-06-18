@@ -71,7 +71,7 @@ python "Code With Notes.py"
 ### Main Upload Interface
 ![Main Upload Interface](Screenshot1.png)
 
-### Selecting Folders From Computer
+### Selecting Folders
 ![Selecting Folders](Screenshot2.png)
 
 ### Processing Extraction and Results
