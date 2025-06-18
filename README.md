@@ -66,6 +66,17 @@ python "Code With Notes.py"
 
 # Local Planning Authority PDF Analysis Web Tool
 
+## Screenshots
+
+### Main Upload Interface
+![Main Upload Interface](Screenshot1.png)
+
+### Selecting Folders From Computer
+![Selecting Folders](Screenshot2.png)
+
+### Processing Extraction and Results
+![Processing](Screenshot3.png)
+
 This project provides a web-based tool for batch-processing UK Local Planning Authority planning policy PDF documents. It extracts key accessibility standards (M4(2), M4(3)), percentage targets, plan periods, and document adoption/proposal dates. The tool uses advanced PDF parsing, OCR, and NLP techniques to automate data extraction and summarization.
 
 ## Features
